@@ -25,5 +25,7 @@ def main() -> None:
                 except Exception as e:
                     st.error(f"An error occurred: {e}")
 
+        converting.button("Convert PDF to CSV", disabled=False, key="convert_button3")
+
 if __name__ == "__main__":
     main()
