@@ -12,10 +12,20 @@ def convert_tables_into_dataframe(tables: List[ExtractedTable]) -> Iterator[pd.D
     for table in tables:
         yield table.df
 
-def convert_pdf_to_dataframe(stream: BytesIO) -> Iterator[Tuple[int, Iterator[pd.DataFrame]]]:
+def convert_pdf_to_dataframe(
+    stream: BytesIO, 
+    implicit_rows: bool = False, 
+    implicit_columns: bool = False, 
+    borderless_tables: bool = False
+) -> Iterator[Tuple[int, Iterator[pd.DataFrame]]]:
     doc = PDF(src=stream, pdf_text_extraction=False)
     ocr = VisionOCR(api_key=config["GCP_VISION_API_KEY"])
-    extracted_tables = doc.extract_tables(ocr=ocr)
+    extracted_tables = doc.extract_tables(
+        ocr=ocr,
+        implicit_rows=implicit_rows,
+        implicit_columns=implicit_columns,
+        borderless_tables=borderless_tables
+    )
 
     for page, tables in extracted_tables.items():
         yield page, convert_tables_into_dataframe(tables)

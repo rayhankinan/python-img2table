@@ -9,12 +9,20 @@ def main() -> None:
     if uploaded_file is None:
         return
 
+    implicit_rows = st.checkbox("Implicit Rows", value=False)
+    implicit_columns = st.checkbox("Implicit Columns", value=False)
+    borderless_tables = st.checkbox("Borderless Tables", value=False)
     converting = st.empty()
 
     if converting.button("Convert PDF to CSV", disabled=False, key="convert_button1"):
         converting.button("Converting...", disabled=True, key="convert_button2")
 
-        for page, df_iter in convert_pdf_to_dataframe(uploaded_file):
+        for page, df_iter in convert_pdf_to_dataframe(
+            uploaded_file,
+            implicit_rows=implicit_rows,
+            implicit_columns=implicit_columns,
+            borderless_tables=borderless_tables
+        ):
             st.header(f"{uploaded_file.name} - Page {page}")
 
             for i, df in enumerate(df_iter):
